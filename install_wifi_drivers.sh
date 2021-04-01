@@ -8,7 +8,7 @@
 # CZ 2020
 
 echo "Install essential packages to compile the drivers"
-sudo apt install git dkms build-essential raspberrypi-kernel-headers bc
+sudo apt --yes install git dkms build-essential raspberrypi-kernel-headers bc
 
 echo "Get the driver packages from Github"
 git clone https://github.com/aircrack-ng/rtl8812au.git
