@@ -7,7 +7,7 @@
 # CZ 2020
 
 echo "Update system ..."
-sudo apt update && apt -y upgrade
+sudo apt update && sudo apt -y upgrade
 
 echo "Remove some packages ..."
 
