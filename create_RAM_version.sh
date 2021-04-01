@@ -46,7 +46,7 @@ echo "Add commands ro and rw to .bashrc ..."
 echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
 echo "alias ro='sudo mount / -o remount,ro; sudo mount /boot -o remount,ro'" >> .bashrc
 
-# FOR A REAL READ-ONLY SYSTEM, UNCOMMENT THE FOLLOWING 4 LINES
+# FOR A REAL READ-ONLY SYSTEM, UNCOMMENT THE LAST 4 LINES OF THIS BLOCK
 # THIS WILL MOUNT THE FILE SYSTEM AS read-only
 # - makes only sense, when the RaspAP configuration is stable and shoudl not be changed 
 # - MIGHT NOT WORK WITH SOME SYSTEMD SERVICES, CHECK LOGS!!!
