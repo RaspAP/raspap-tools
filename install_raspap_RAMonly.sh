@@ -76,7 +76,7 @@ _echo "You should run 'sudo raspi-config' and set the 'WLAN coutry' in the local
 
 if [ -z $raspapyes ] || [[ $raspapyes =~ [Yy] ]]; then
    _echo "Start installation of RaspAP (all features)"
-   curl -sL https://install.raspap.com | sudo bash -s -- --yes --repo --branch
+   curl -sL https://install.raspap.com | sudo bash -s -- --yes --repo  $repo --branch $branch
 else
    _echo "Start installation of RaspAP"
    curl -sL https://install.raspap.com | sudo bash -s -- --repo $repo --branch $branch
