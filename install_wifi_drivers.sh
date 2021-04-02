@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install Realtek wlan drivers
-# - these drivers cover a lot of commonly used Realtek chip sets used in Wifi USB devices
+# - only drivers for rtl8812au and rtl88x2bu devices are installed
 # - on older single core Raspis the compilation can take a long time (hours)!
 # - the drivers are installed using DKMS and will automatically be recompiled after a kernel update
 #   which again might take a long time
