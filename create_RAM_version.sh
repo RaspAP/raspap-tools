@@ -6,8 +6,8 @@
 # tested with Raspian lite Buster 
 # CZ 2020
 
-echo "Update system ..."
-sudo apt update && sudo apt -y upgrade
+#echo "Update system ..."
+#sudo apt update && sudo apt -y upgrade
 
 echo "Remove some packages ..."
 

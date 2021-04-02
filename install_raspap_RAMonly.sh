@@ -19,7 +19,7 @@ function _RAMVersion() {
 }
 
 function _installWifiDrivers() {
-  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_wifi_driver_modules.sh -O /tmp/install_wifi_drivers.sh
+  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_wlan_driver_modules.sh -O /tmp/install_wifi_drivers.sh
   source /tmp/install_wifi_drivers.sh
 }
 
@@ -55,8 +55,8 @@ read -p "Move log files and caches to RAM (Y/n):" ramversion < /dev/tty
 
 read -p "Install additional drivers for Wifi adapters (e.g. Realtek) (Y/n):" wifidrivers < /dev/tty
 
-_echo "Update system ..."
-sudo apt update && sudo apt -y upgrade
+#_echo "Update system ..."
+#sudo apt update && sudo apt -y upgrade
 sudo apt --yes install curl wget
 
 if [ -z $ramversion ] || [[ $ramversion =~ [Yy] ]]; then
