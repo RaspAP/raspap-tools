@@ -9,9 +9,15 @@
 #  --branch : branch of repository - default master 
 #
 
-RD=`tput setaf 1; tput bold`
-GN=`tput setaf 2; tput bold`
-DEF=`tput sgr0`
+RED="\e[31m\e[1m"
+GREEN="\e[32m\e[1m"
+DEF="\e[0m"
+
+function _echo() {
+    txt=$1;col="$GREEN"
+	[ $# == 2 ] && txt=$2 && col=$1
+    echo -e "${col}$txt${DEF}"
+}
 
 function _RAMVersion() {
   wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/create_RAM_version.sh -O /tmp/create_RAM_version.sh
@@ -21,10 +27,6 @@ function _RAMVersion() {
 function _installWifiDrivers() {
   wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_wlan_driver_modules.sh -O /tmp/install_wifi_drivers.sh
   source /tmp/install_wifi_drivers.sh
-}
-
-function _echo() {
-    echo -e "${GN}$1${DEF}"
 }
 
 repo="raspap/raspap-webgui"
@@ -45,7 +47,7 @@ while :; do
   shift
 done
 
-_echo "\n\nInstall RaspAP and additional Wifi drivers and configure a nearly RAM only system"
+_echo "\n\nInstall RaspAP, additional Wifi drivers and configure a nearly RAM only system"
 echo -e "\nRepository: $repo"
 echo -e "\nBranch: $branch \n\n"
 
@@ -71,7 +73,7 @@ fi
 
 # unblock wlan for raspis with build in wireless
 sudo rfkill unblock wlan
-_echo "You should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options"
+_echo "\nYou should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options\n"
 
 if [ -z $raspapyes ] || [[ $raspapyes =~ [Yy] ]]; then
    _echo "Start installation of RaspAP (all features)"
