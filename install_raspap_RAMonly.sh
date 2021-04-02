@@ -19,7 +19,7 @@ function _RAMVersion() {
 }
 
 function _installWifiDrivers() {
-  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_wifi_drivers.sh -O /tmp/install_wifi_drivers.sh
+  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_wifi_driver_modules.sh -O /tmp/install_wifi_drivers.sh
   source /tmp/install_wifi_drivers.sh
 }
 
@@ -72,7 +72,6 @@ fi
 # unblock wlan for raspis with build in wireless
 sudo rfkill unblock wlan
 _echo "You should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options"
-
 
 if [ -z $raspapyes ] || [[ $raspapyes =~ [Yy] ]]; then
    _echo "Start installation of RaspAP (all features)"
