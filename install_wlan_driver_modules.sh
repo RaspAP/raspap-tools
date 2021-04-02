@@ -4,22 +4,18 @@
 # The WLAN USB device has to be connected one after the other
 #
 
-RD=`tput setaf 1; tput bold`
-GN=`tput setaf 2; tput bold`
-DEF=`tput sgr0`
+RED="\e[31m"
+GREEN="\e[32m"
+DEF="\e[0m"
 
 function _echo() {
-	txt=$1
-	col=$GN
-    if [ $# == 2 ]; then 
-		[[ "$1" == "RD" ]] && col=$RD
-		txt=$2
-	fi
+    txt=$1;col="$GREEN"
+	[ $# == 2 ] && txt=$2 && col=$1
     echo -e "${col}$txt${DEF}"
 }
 
 _echo "\n\nInstall driver for connected WLAN adapter\n"
-_echo "Utilizing: Raspberry Pi wifi driver installer by MrEngman - http://downloads.fars-robotics.net/\n"
+_echo "Utilizing the Raspberry Pi wifi driver installer by MrEngman - http://downloads.fars-robotics.net/\n"
 echo -e "You will be prompted to connect the device(s) one by one.\n"
 
 sudo wget http://downloads.fars-robotics.net/wifi-drivers/install-wifi -O /usr/local/sbin/install-wifi.sh
