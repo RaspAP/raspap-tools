@@ -4,8 +4,8 @@
 # The WLAN USB device has to be connected one after the other
 #
 
-RED="\e[31m"
-GREEN="\e[32m"
+RED="\e[31m\e[1m"
+GREEN="\e[32m\e[1m"
 DEF="\e[0m"
 
 function _echo() {
@@ -18,11 +18,11 @@ _echo "\n\nInstall driver for connected WLAN adapter\n"
 _echo "Utilizing the Raspberry Pi wifi driver installer by MrEngman - http://downloads.fars-robotics.net/\n"
 echo -e "You will be prompted to connect the device(s) one by one.\n"
 
-sudo wget http://downloads.fars-robotics.net/wifi-drivers/install-wifi -O /usr/local/sbin/install-wifi.sh
+sudo wget -q http://downloads.fars-robotics.net/wifi-drivers/install-wifi -O /usr/local/sbin/install-wifi.sh
 sudo chmod +x /usr/local/sbin/install-wifi.sh
 
 while :; do
-  echo -ne "${GN}Connect a wlan device and press RETURN ( Q to quit) ${DEF}"
+  echo -ne "${GREEN}Connect a single wlan device and press RETURN ( Q to quit) ${DEF}"
   read OK < /dev/tty
   if [ ! -z $OK ] && [[ $OK =~ [Qq] ]]; then
      _echo "  Installation done - exit"
