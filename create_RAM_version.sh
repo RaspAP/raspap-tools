@@ -32,7 +32,7 @@ fi
 
 echo "Add tmpfs entries to /etc/fstab ..."
 # move directories to RAM
-dirs=( "/tmp" "/var/log" "/var/tmp" "/var/lib/misc" "/var/cache") # "/var/lib/systemd" 
+dirs=( "/tmp" "/var/log" "/var/tmp" "/var/lib/misc" "/var/cache")
 # special dirs used by vnstat and php
 dirs+=( "/var/lib/vnstat" "/var/php/sessions" )
 
