@@ -5,7 +5,7 @@
 # - the drivers are installed using DKMS and will automatically be recompiled after a kernel update
 #   which again might take a long time
 #
-# CZ 2020
+# CZ 2020 
 
 echo "Install essential packages to compile the drivers"
 sudo apt --yes install git dkms build-essential raspberrypi-kernel-headers bc

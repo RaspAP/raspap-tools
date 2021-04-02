@@ -2,7 +2,7 @@
 #
 # Install RaspAP + additional Wireless drivers + minimize write access to sd-card
 #
-# start as user pi
+# start as user pi 
 #
 # Options: 
 #  --repo   : RaspAP github repository - default raspap/raspap-webgui 

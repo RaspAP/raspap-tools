@@ -3,7 +3,7 @@
 # - Write access can be checked with "iotop -aoP"
 # - Remaining access originates mainly from the ext4 journal update (process jbd2)  
 #
-# tested with Raspian lite Buster
+# tested with Raspian lite Buster 
 # CZ 2020
 
 echo "Update system ..."
