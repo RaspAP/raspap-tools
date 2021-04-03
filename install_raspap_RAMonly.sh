@@ -67,7 +67,7 @@ if [ -z $ramversion ] || [[ $ramversion =~ [Yy] ]]; then
 fi
 
 if [ -z $wifidrivers ] || [[ $wifidrivers =~ [Yy] ]]; then
-   _echo "Install additional Wifi drivers - this might take a long time ..."
+   _echo "Install additional Wifi drivers ..."
    _installWifiDrivers
 fi
 
