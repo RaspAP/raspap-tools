@@ -10,7 +10,7 @@ DEF="\e[0m"
 
 function _echo() {
     txt=$1;col="$GREEN"
-	[ $# == 2 ] && txt=$2 && col=$1
+    [ $# == 2 ] && txt=$2 && col=$1
     echo -e "${col}$txt${DEF}"
 }
 
@@ -33,13 +33,13 @@ while :; do
   found=$( echo $check | grep -oP unrecognised )
 #  echo "found $found"
   if [ -z $found ]; then
-	device=$( echo "$check" | sed -rn 's/.*wifi module is.*ID(.*)$/\1/p' )
-	driver=$( echo "$check" | sed -rn 's/And it uses the (.*)\s.*$/\1/p')
-	_echo "Install driver $driver for $device ..."
+    device=$( echo "$check" | sed -rn 's/.*wifi module is.*ID(.*)$/\1/p' )
+    driver=$( echo "$check" | sed -rn 's/And it uses the (.*)\s.*$/\1/p')
+    _echo "Install driver $driver for $device ..."
     sudo /usr/local/sbin/install-wifi.sh $driver
   else
-	_echo "RED" "No device connected or not recognized. Driver might already be installed."
-	echo "Connected USB devices are: "
-	lsusb
+    _echo "$RED" "No device connected or not recognized. Driver might already be installed."
+    echo "Connected USB devices are: "
+    lsusb
   fi
 done
