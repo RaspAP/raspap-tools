@@ -3,8 +3,8 @@
 # Install RaspAP + additional Wireless drivers + minimize write access to sd-card
 # ===============================================================================
 # - Write Raspian to an SD-card
-# - Create file with name "ssh" (no extension) to the partition called "boot", to allow for SSH access
-# - start Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
+# - Create a file with name "ssh" (no extension) on the partition called "boot", to allow for SSH access
+# - start the Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
 # - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_RAMonly.sh"
 # - chmod +x install_raspap_RAMonly.sh
 # - ./install_raspap_RAMonly.sh
@@ -30,16 +30,12 @@ function _installWifiDrivers() {
   source /tmp/install_wifi_drivers.sh
 }
 
-# default repo/branch
-repo="raspap/raspap-webgui"
-branch="master"
-
 _echo "\n\nInstall RaspAP, additional Wifi drivers and configure a nearly RAM only system"
 
-read -p "Do you want to install the standard version of RaspAP ($repo) (Y/n) :" raspapsel < /dev/tty
-raspapopts="--repo $repo --branch $branch"
+read -p "Do you want to install the standard version of RaspAP (raspap/raspap-webgui) (Y/n) :" raspapsel < /dev/tty
+raspapopts=""
 if [ ! -z $raspapsel ] && [[ $raspapsel =~ [Nn] ]]; then
-    read -p "Enter the installation options for RaspAP (default: $raspapopts) :" raspapopts < /dev/tty
+    read -p "Enter the installation options for RaspAP :" raspapopts < /dev/tty
 fi
 
 read -p "Install RaspAP with all features ( N: features can be selected ) (Y/n):" raspapyes < /dev/tty
