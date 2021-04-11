@@ -38,7 +38,7 @@ while :; do
 	_echo "Install driver $driver for $device ..."
     sudo /usr/local/sbin/install-wifi.sh $driver
   else
-	_echo "RD" "No device connected or not recognized. Driver might already be installed."
+	_echo "RED" "No device connected or not recognized. Driver might already be installed."
 	echo "Connected USB devices are: "
 	lsusb
   fi
