@@ -1,12 +1,13 @@
 #!/bin/bash
 #
 # Install RaspAP + additional Wireless drivers + minimize write access to sd-card
-#
-# start as user pi 
-#
-# Options: 
-#  --repo   : RaspAP github repository - default raspap/raspap-webgui 
-#  --branch : branch of repository - default master 
+# ===============================================================================
+# - Write Raspian to an SD-card
+# - Create file with name "ssh" (no extension) to the partition called "boot", to allow for SSH access
+# - start Raspberry PI with the SD-Card and login via ssh (deafult user: pi, password: raspberry)
+# - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_RAMonly.sh"
+# - chmod +x install_raspap_RAMonly.sh
+# - ./install_raspap_RAMonly.sh
 #
 
 RED="\e[31m\e[1m"
@@ -15,7 +16,7 @@ DEF="\e[0m"
 
 function _echo() {
     txt=$1;col="$GREEN"
-	[ $# == 2 ] && txt=$2 && col=$1
+    [ $# == 2 ] && txt=$2 && col=$1
     echo -e "${col}$txt${DEF}"
 }
 
@@ -29,27 +30,17 @@ function _installWifiDrivers() {
   source /tmp/install_wifi_drivers.sh
 }
 
+# default repo/branch
 repo="raspap/raspap-webgui"
 branch="master"
 
-while :; do
-  case "${1-}" in
-      -r|--repo|--repository) repo="$2" 
-      shift
-      ;;
-      -b|--branch) branch="$2" 
-      shift
-      ;;
-	  *)
-      break
-     ;;
-  esac
-  shift
-done
-
 _echo "\n\nInstall RaspAP, additional Wifi drivers and configure a nearly RAM only system"
-echo -e "\nRepository: $repo"
-echo -e "\nBranch: $branch \n\n"
+
+read -p "Do you want to install the standard version of RaspAP ($repo) (Y/n) :" raspapsel < /dev/tty
+raspapopts="--repo $repo --branch $branch"
+if [ ! -z $raspapsel ] && [[ $raspapsel =~ [Nn] ]]; then
+    read -p "Enter the installation options for RaspAP (default: --repo=$repo --branch=$branch) :" raspapopts < /dev/tty
+fi
 
 read -p "Install RaspAP with all features ( N: features can be selected ) (Y/n):" raspapyes < /dev/tty
 
@@ -77,10 +68,10 @@ _echo "\nYou should run 'sudo raspi-config' and set the 'WLAN coutry' in the loc
 
 if [ -z $raspapyes ] || [[ $raspapyes =~ [Yy] ]]; then
    _echo "Start installation of RaspAP (all features)"
-   curl -sL https://install.raspap.com | sudo bash -s -- --yes --repo  $repo --branch $branch
+    curl -sL https://install.raspap.com | sudo bash -s -- --yes $raspapopts
 else
    _echo "Start installation of RaspAP"
-   curl -sL https://install.raspap.com | sudo bash -s -- --repo $repo --branch $branch
+    curl -sL https://install.raspap.com | sudo bash -s -- $raspapopts
 fi
 
 _echo "The system should be rebooted now"
