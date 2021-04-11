@@ -4,7 +4,7 @@
 # ===============================================================================
 # - Write Raspian to an SD-card
 # - Create file with name "ssh" (no extension) to the partition called "boot", to allow for SSH access
-# - start Raspberry PI with the SD-Card and login via ssh (deafult user: pi, password: raspberry)
+# - start Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
 # - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_RAMonly.sh"
 # - chmod +x install_raspap_RAMonly.sh
 # - ./install_raspap_RAMonly.sh
@@ -39,7 +39,7 @@ _echo "\n\nInstall RaspAP, additional Wifi drivers and configure a nearly RAM on
 read -p "Do you want to install the standard version of RaspAP ($repo) (Y/n) :" raspapsel < /dev/tty
 raspapopts="--repo $repo --branch $branch"
 if [ ! -z $raspapsel ] && [[ $raspapsel =~ [Nn] ]]; then
-    read -p "Enter the installation options for RaspAP (default: --repo=$repo --branch=$branch) :" raspapopts < /dev/tty
+    read -p "Enter the installation options for RaspAP (default: $raspapopts) :" raspapopts < /dev/tty
 fi
 
 read -p "Install RaspAP with all features ( N: features can be selected ) (Y/n):" raspapyes < /dev/tty
