@@ -1,4 +1,4 @@
-# Helper Scripts for RasAP 
+# Helper Scripts for RaspAP 
 To run a script
 ```
 $ wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_RAMonly.sh
