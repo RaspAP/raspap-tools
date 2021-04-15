@@ -8,7 +8,7 @@ $ ./install_raspap_RAMonly.sh
 Follow the instructions.
 
 ## Configure Raspian, install drivers and start the RaspAP installer
-The script `install_raspap_RAMonly.sh` configures Raspian for a (nearly) RAM only operation (see below), installs additional Wifi driver modules and starts the RaspAP installer ( https://install.raspap.com ). See details about the Raspian configuration and driver installation below.
+The script `install_raspap_RAMonly.sh` configures Raspian for a (nearly) RAM only operation (see below), allows to install additional Wifi driver modules and starts the RaspAP installer ( https://install.raspap.com ). See details about the Raspian configuration and driver installation below.
 
 ## Install missing WLAN driver modules
 A standard nuisance of Raspian is, that drivers for a lot of WLAN devices are missing. This is especially true for Realtek based devices.
