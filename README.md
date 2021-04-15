@@ -25,5 +25,5 @@ Utilizing a Raspberry PI as an access point, requires a reliable operation over 
 
 Moving logging and temporary data to a RAM based files system can minimize the risk and extend the lifetime of the SD-card substantially.
 
-The script `create_RAM_version.sh` will replaces the default logging service, moves temporary file locations to RAM and switches off the file check and swap in `/boot/config.txt`.  
+The script `create_RAM_version.sh` will replaces the default logging service, moves temporary file locations to RAM and switches off the file system check and swap in `/boot/config.txt`. By default the file system is still in read/write mode, so RaspAP settings can be saved. 
 The remaing access to the SD-card can be checked with the tool `iotop -aoP`. 
