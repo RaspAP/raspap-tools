@@ -7,13 +7,8 @@ $ ./install_raspap_RAMonly.sh
 ```
 Follow the instructions.
 
-## (Nearly) RAM only Raspian
-Utilizing a Raspberry PI as an access point, requires a reliable operation over a long period of time. Switching the Raspberry PI off without a regular shutdown procedure might lead to a damaged system. Writing lots of logging and temporary data to the SD-card will shorten the lifetime of the system. 
-
-Moving logging and temporary data to a RAM based files system can minimize the risk and extend the lifetime of the SD-card substantially.
-
-The script `create_RAM_version.sh` will replaces the default logging service, moves temporary file locations to RAM and switches off the file check and swap in `/boot/config.txt`.  
-The remaing access to the SD-card can be checked with the tool `iotop`. 
+## Configure Raspian, install drivers and start the RaspAP installer
+The script `install_raspap_RAMonly.sh` configures Raspian for a (nearly) RAM only operation (see below), installs additional Wifi driver modules and starts the RaspAP installer ( https://install.raspap.com ). See details about the Raspian configuration and driver installation below.
 
 ## Install missing WLAN driver modules
 A standard nuisance of Raspian is, that drivers for a lot of WLAN devices are missing. This is especially true for Realtek based devices.
@@ -25,5 +20,10 @@ The webpage http://downloads.fars-robotics.net by MrEngman provides a lot of pre
 If you prefer to compile drivers from scratch, the script `install_wlan_drivers_8812au_88x2bu.sh` extracts the source for two very common drivers (Realtek 8812au and 88x2bu) from Github. The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
 Depending on the raspberry pi version, this can take a long time.
 
-## Configure Raspian, install drivers and start the RaspAP installer
-The script `install_raspap_RAMonly.sh` configures Raspian for a (nearly) RAM only operation (see below), installs additional Wifi driver modules and starts the RaspAP installer ( https://install.raspap.com ).
+## (Nearly) RAM only Raspian
+Utilizing a Raspberry PI as an access point, requires a reliable operation over a long period of time. Switching the Raspberry PI off without a regular shutdown procedure might lead to a damaged system. Writing lots of logging and temporary data to the SD-card will shorten the lifetime of the system. 
+
+Moving logging and temporary data to a RAM based files system can minimize the risk and extend the lifetime of the SD-card substantially.
+
+The script `create_RAM_version.sh` will replaces the default logging service, moves temporary file locations to RAM and switches off the file check and swap in `/boot/config.txt`.  
+The remaing access to the SD-card can be checked with the tool `iotop`. 
