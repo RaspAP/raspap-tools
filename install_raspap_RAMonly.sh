@@ -2,7 +2,7 @@
 #
 # Install RaspAP + additional Wireless drivers + minimize write access to sd-card
 # ===============================================================================
-# - Write Raspian to an SD-card
+# - Write Raspian lite to a SD-card
 # - Create a file with name "ssh" (no extension) on the partition called "boot", to allow for SSH access
 # - start the Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
 # - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_RAMonly.sh"
