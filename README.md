@@ -16,7 +16,7 @@ A standard nuisance of Raspian is, that drivers for a lot of WLAN devices are mi
 ### Precompiled driver modules
 The webpage http://downloads.fars-robotics.net by MrEngman provides a lot of pre-compiled WLAN driver modules for different Raspian kernel versions. In order to install multiple drivers in one go, the script `install_wlan_driver_modules.sh` provides a wrapper for the install script http://downloads.fars-robotics.net/wifi-drivers/install-wifi. The script asks to plug in one device at a time and starts the `install-wifi` script. You might have to rerun the installation, when a kernel update is done.
 
-## Compile and install drivers
+### Alternative: Compile and install drivers
 If you prefer to compile drivers from scratch, the script `install_wlan_drivers_8812au_88x2bu.sh` extracts the source for two very common drivers (Realtek 8812au and 88x2bu) from Github. The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
 Depending on the raspberry pi version, this can take a long time.
 

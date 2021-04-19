@@ -5,7 +5,7 @@
 # - Write Raspian lite to a SD-card
 # - Create a file with name "ssh" (no extension) on the partition called "boot", to allow for SSH access
 # - start the Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
-# - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_ro_wlan.sh"
+# - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_ro_wlan.sh"
 # - chmod +x install_raspap_ro_wlan.sh
 # - ./install_raspap_ro_wlan.sh
 #
