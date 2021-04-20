@@ -3,6 +3,8 @@
 # - Write access can be checked with "iotop -aoP"
 # - Remaining access originates mainly from the ext4 journal update (process jbd2)  
 #
+# Option: -ro  : enable the option to mount /boot and / as read-only 
+# 
 # tested with Raspian lite Buster 
 # zbchristian 2020
 
@@ -14,6 +16,8 @@ function _dirs2tmpfs() {
     fi
   done 
 }
+
+[ $# == 1 ] && isRO=true || isRO=false 
 
 
 RED="\e[31m\e[1m"
@@ -54,26 +58,30 @@ dirs=( "/tmp" "/var/log" "/var/tmp" "/var/lib/misc" "/var/cache")
 dirs+=( "/var/lib/vnstat" "/var/php/sessions" )
 _dirs2tmpfs
 
-# MOUNT THE FILE SYSTEMS AS read-only
-# - makes only sense, when the RaspAP configuration is stable and shoudl not be changed 
-# - MIGHT NOT WORK WITH SOME SYSTEMD SERVICES, CHECK LOGS!!!
-echo -e "${RED}"
-read -p "Mount /boot and the root system as Read-Only ? Be aware, that this might cause problems with system services! (y/N) :" mountRO < /dev/tty
-echo -e "${DEF}"
-if [ ! -z $mountRO ] && [[ $mountRO =~ [Yy] ]]; then
-  if ! grep -q ",ro" /etc/fstab; then
-    sudo sed -i -r 's/\/boot(.*)defaults/\/boot\1defaults,ro/' /etc/fstab
-    sudo sed -i -r 's/\/ (.*)defaults/\/ \1defaults,ro/' /etc/fstab
-  fi
-  echo -e "${GREEN}Add more directorie(s) to tmpfs ...${DEF}"
-  dirs=( "/lib/systemd" "/var/lib/dhcp" "/var/lib/systemd" )
-  _dirs2tmpfs
-  echo -e "${GREEN}Add commands ro and rw for a quick remount of the root system to .bashrc ${DEF}"
-  echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
-  echo "alias ro='sudo mount / -o remount,ro; sudo mount /boot -o remount,ro'" >> .bashrc
+
+if [ $isRO = true ];  then
+	# MOUNT THE FILE SYSTEMS AS read-only
+	# - makes only sense, when the RaspAP configuration is stable and shoudl not be changed 
+	# - MIGHT NOT WORK WITH SOME SYSTEMD SERVICES, CHECK LOGS!!!
+	echo -e "${RED}"
+	read -p "Mount /boot and the root system as Read-Only ? Makes only sense for a completely configured system! (y/N) :" mountRO < /dev/tty
+	echo -e "${DEF}"
+	if [ ! -z $mountRO ] && [[ $mountRO =~ [Yy] ]]; then
+	  if ! grep -q ",ro" /etc/fstab; then
+		sudo sed -i -r 's/\/boot(.*)defaults/\/boot\1defaults,ro/' /etc/fstab
+		sudo sed -i -r 's/\/ (.*)defaults/\/ \1defaults,ro/' /etc/fstab
+	  fi
+#	  echo -e "${GREEN}Add more directorie(s) to tmpfs ...${DEF}"
+#	  dirs=( "/var/lib/systemd/timesync" "/var/lib/systemd/rfkill" "/var/lib/dhcp" "/var/lib/dhcpd5" )
+#	  _dirs2tmpfs
+	  echo -e "${GREEN}Add commands ro and rw for a quick remount of the root system to .bashrc ${DEF}"
+	  echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
+	  echo "alias ro='sudo mount / -o remount,ro; sudo mount /boot -o remount,ro'" >> .bashrc
+	fi
+else
+	echo -e "${GREEN}To obtain a real READ-ONLY system, configure the system and rerun this script with option -ro:${DEF} `basename $0 ` -ro "
 fi
 
 
-
-echo "${RED}You should reboot now ...${DEF}"
+echo -e "${RED}You should reboot now ...${DEF}"
 
