@@ -66,7 +66,7 @@ if [ ! -z $mountRO ] && [[ $mountRO =~ [Yy] ]]; then
     sudo sed -i -r 's/\/ (.*)defaults/\/ \1defaults,ro/' /etc/fstab
   fi
   echo -e "${GREEN}Add more directorie(s) to tmpfs ...${DEF}"
-  dirs=( "/lib/systemd" "/var/lib/dhcp")
+  dirs=( "/lib/systemd" "/var/lib/dhcp" "/var/lib/systemd" )
   _dirs2tmpfs
   echo -e "${GREEN}Add commands ro and rw for a quick remount of the root system to .bashrc ${DEF}"
   echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
