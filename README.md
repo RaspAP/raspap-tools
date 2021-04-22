@@ -20,10 +20,15 @@ The webpage http://downloads.fars-robotics.net by MrEngman provides a lot of pre
 If you prefer to compile drivers from scratch, the script `install_wlan_drivers_8812au_88x2bu.sh` extracts the source for two very common drivers (Realtek 8812au and 88x2bu) from Github. The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
 Depending on the raspberry pi version, this can take a long time.
 
-## (Nearly) Read-only Raspian
+## Raspian with substantially reduced SD-Card access
 Utilizing a Raspberry PI as an access point, requires a reliable operation over a long period of time. Switching the Raspberry PI off without a regular shutdown procedure might lead to a damaged system. Writing lots of logging and temporary data to the SD-card will shorten the lifetime of the system. 
 
 Moving logging and temporary data to a RAM based files system can minimize the risk and extend the lifetime of the SD-card substantially.
 
 The script `raspian_readonly.sh` will replaces the default logging service, moves temporary file locations to RAM and switches off the file system check and swap in `/boot/config.txt`. By default the file system is still in read/write mode, so RaspAP settings can be saved. 
 The remaing access to the SD-card can be checked with the tool `iotop -aoP`. 
+
+## Read-only Raspian
+For a fully read-only system, start the script with the read-only option: `raspian_readonly.sh -ro`
+Be aware, that this might render your system unusable. Check the log files (`journalctl`) for error messages. 
+In order to write changes to the system, you can remount the file system with the command `rw`, which is placed into `.bashrc`. Remounting to read-only is achieved by the command `ro`.  

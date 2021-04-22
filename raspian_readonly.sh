@@ -26,9 +26,6 @@ DEF="\e[0m"
 
 echo -e "${GREEN}\n\nModify System to minimize the Write Access to the SD-Card${DEF}\n"
 
-#echo "Update system ..."
-#sudo apt update && sudo apt -y upgrade
-
 echo -e "${GREEN}Remove some packages ...${DEF}"
 
 sudo apt -y remove --purge triggerhappy dphys-swapfile logrotate 
@@ -61,22 +58,33 @@ _dirs2tmpfs
 
 if [ $isRO = true ];  then
 	# MOUNT THE FILE SYSTEMS AS read-only
-	# - makes only sense, when the RaspAP configuration is stable and shoudl not be changed 
+	# - makes only sense, when the Raspian configuration is stable and will not be changed 
 	# - MIGHT NOT WORK WITH SOME SYSTEMD SERVICES, CHECK LOGS!!!
 	echo -e "${RED}"
-	read -p "Mount /boot and the root system as Read-Only ? Makes only sense for a completely configured system! (y/N) :" mountRO < /dev/tty
+	echo    "Mounting the root filesystem as read-only might render your system unusable!" 
+	echo    "This makes only sense for a completely configured and stable system." 
+	read -p "Mount /boot and the root system as Read-Only ? (y/N) :" mountRO < /dev/tty
 	echo -e "${DEF}"
 	if [ ! -z $mountRO ] && [[ $mountRO =~ [Yy] ]]; then
-	  if ! grep -q ",ro" /etc/fstab; then
-		sudo sed -i -r 's/\/boot(.*)defaults/\/boot\1defaults,ro/' /etc/fstab
-		sudo sed -i -r 's/\/ (.*)defaults/\/ \1defaults,ro/' /etc/fstab
-	  fi
-#	  echo -e "${GREEN}Add more directorie(s) to tmpfs ...${DEF}"
-#	  dirs=( "/var/lib/systemd/timesync" "/var/lib/systemd/rfkill" "/var/lib/dhcp" "/var/lib/dhcpd5" )
-#	  _dirs2tmpfs
-	  echo -e "${GREEN}Add commands ro and rw for a quick remount of the root system to .bashrc ${DEF}"
-	  echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
-	  echo "alias ro='sudo mount / -o remount,ro; sudo mount /boot -o remount,ro'" >> .bashrc
+		if ! grep -q ",ro" /etc/fstab; then
+			sudo sed -i -r 's/\/boot(.*)defaults/\/boot\1defaults,ro/' /etc/fstab
+			sudo sed -i -r 's/\/ (.*)defaults/\/ \1defaults,ro/' /etc/fstab
+		fi
+		echo -e "${GREEN}Move more directorie(s) to RAM ...${DEF}"
+		dirs=( "/var/lib/dhcp" "/var/lib/dhcpcd5" )
+		_dirs2tmpfs
+		echo -e "${GREEN}Install NTP and disable systemd-timesyncd ...${DEF}"
+		sudo apt -y install ntp
+		sudo systemctl disable systemd-timesyncd
+		sudo systemctl enable ntp
+		echo -e "${GREEN}Move resolv.conf to /run ...${DEF}"
+		sudo cp /etc/resolv.conf /run/resolv.conf
+		sudo ln -sf /run/resolv.conf /etc/resolv.conf
+		echo -e "${GREEN}Add the commands for a quick remount of the root system to .bashrc ${DEF}"
+		echo -e "${GREEN}Command: rw - remount filesystem as read and writeable${DEF}"
+		echo -e "${GREEN}         ro - remount filesystem as read-only${DEF}"
+		echo "alias rw='sudo mount / -o remount,rw;  sudo mount /boot -o remount,rw'" >> .bashrc
+		echo "alias ro='sudo mount / -o remount,ro; sudo mount /boot -o remount,ro'" >> .bashrc
 	fi
 else
 	echo -e "${GREEN}To obtain a real READ-ONLY system, configure the system and rerun this script with option -ro:${DEF} `basename $0 ` -ro "
