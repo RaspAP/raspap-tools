@@ -5,9 +5,9 @@
 # - Write Raspian lite to a SD-card
 # - Create a file with name "ssh" (no extension) on the partition called "boot", to allow for SSH access
 # - start the Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
-# - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_ro_wlan.sh"
-# - chmod +x install_raspap_ro_wlan.sh
-# - ./install_raspap_ro_wlan.sh
+# - download this script: "wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_ram_wlan.sh"
+# - chmod +x install_raspap_ram_wlan.sh
+# - ./install_raspap_ram_wlan.sh
 #
 
 RED="\e[31m\e[1m"
@@ -21,8 +21,8 @@ function _echo() {
 }
 
 function _RAMVersion() {
-  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/raspian_readonly.sh -O /tmp/raspian_readonly.sh
-  source /tmp/raspian_readonly.sh
+  wget -q https://raw.githubusercontent.com/zbchristian/raspap-tools/main/raspian_min_write.sh -O /tmp/raspian_min_write.sh
+  source /tmp/raspian_min_write.sh
 }
 
 function _installWifiDrivers() {
