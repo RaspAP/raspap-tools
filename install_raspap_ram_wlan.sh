@@ -62,12 +62,16 @@ fi
 sudo rfkill unblock wlan
 _echo "\nYou should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options\n"
 
+wget -q https://install.raspap.com -O install_raspap.sh
+chmod +x install_raspap.sh
 if [ -z $raspapyes ] || [[ $raspapyes =~ [Yy] ]]; then
    _echo "Start installation of RaspAP (all features)"
-    curl -sL https://install.raspap.com | sudo bash -s -- --yes $raspapopts
+   ./install_raspap.sh --yes $raspapopts
+#    curl -sL https://install.raspap.com | sudo bash -s -- --yes $raspapopts
 else
    _echo "Start installation of RaspAP"
-    curl -sL https://install.raspap.com | sudo bash -s -- $raspapopts
+   ./install_raspap.sh $raspapopts
+#    curl -sL https://install.raspap.com | sudo bash -s -- $raspapopts
 fi
 
 _echo "The system should be rebooted now"
