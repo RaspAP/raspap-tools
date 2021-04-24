@@ -1,7 +1,7 @@
 # Helper Scripts for RaspAP 
 To run a script
 ```
-$ wget https://raw.githubusercontent.com/zbchristian/raspap-tools/main/install_raspap_ram_wlan.sh
+$ wget https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_raspap_ram_wlan.sh
 $ chmod +x install_raspap_ram_wlan.sh
 $ ./install_raspap_ram_wlan.sh
 ```
