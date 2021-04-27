@@ -27,3 +27,13 @@ Moving logging and temporary data to a RAM based files system can minimize the r
 
 The script `raspian_min_write.sh` replaces the default logging service, moves temporary file locations to RAM and switches off the file system check and swap in `/boot/config.txt`. By default the file system is still in read/write mode, so RaspAP settings can be saved. 
 The remaing access to the SD-card can be checked with the tool `iotop -aoP`. 
+
+
+## Automatic Shutdown when idle
+Running a battery powered RaspAP makes energy management mandatory. The script `install_autoshutdown.sh` installs a system service, which checks every 10 seconds the number of 
+client devices connected to the access point. If the time, since the last client disconnected, exceeds a predefined number of minutes, the shutdown process of the Raspberry Pi 
+is initiated
+
+The script includes the service file `autoshutdown.service` as well as the required script `autoShutdown.sh` written to `/usr/local/sbin`. The install script is asking for the 
+timeout in minutes. 
+  
