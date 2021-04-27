@@ -17,7 +17,10 @@ echo -e "${GREEN}"
 echo    "The Raspberry Pi will be shut down, if no client was connected to the Access Point for a given time"
 read -p "Enter the timeout in minutes ( default 60min ) :" timeout < /dev/tty
 echo -e "${DEF}"
-if [ -z $timeout ]; then
+
+[ -n "$timeout" ] && [ "$timeout" -eq "$timeout" ] 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo -e "${RED}No valid given for the timeout - fall back to 60min\n${DEF}"
     timeout=60
 fi
 
@@ -32,7 +35,7 @@ PartOf=hostapd.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/sbin/autoShutdown.sh 100
+ExecStart=/usr/local/sbin/autoShutdown.sh $timeout
 Restart=on-failure
 
 [Install]
