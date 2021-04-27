@@ -18,7 +18,7 @@ echo    "The Raspberry Pi will be shut down, if no client was connected to the A
 read -p "Enter the timeout in minutes ( default 60min ) :" timeout < /dev/tty
 echo -e "${DEF}"
 if [ -z $timeout ]; then
-	timeout=60
+    timeout=60
 fi
 
 servicefile="/usr/lib/systemd/system/autoshutdown.service"
@@ -46,8 +46,8 @@ sudo tee $scriptfile << EOF > /dev/null
 #!/bin/bash
 
 function sigquit {
-	kill \$!
-	exit 0
+    kill \$!
+    exit 0
 }
 
 trap 'sigquit' QUIT
@@ -55,7 +55,7 @@ trap 'sigquit' SIGINT
 
 timeout=60
 if [ "\$1" -eq "\$1" ] 2>/dev/null; then
-	timeout=\$1
+    timeout=\$1
 fi
 logger "\$0 started with timeout \$timeout minutes..."
 sleep 300
@@ -68,16 +68,16 @@ timeout=\$((60*timeout))
 lastTime=0
 while true
 do
-	numClients=\$(/sbin/iw dev \$apDevice station dump | /bin/grep -oE "([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}" | /usr/bin/wc)
-	if [[ ! \$numClients =~ \s*0(.*) ]] || [ \$lastTime -eq 0 ]; then
-		lastTime=\$(cat /proc/uptime | grep -o '^[0-9]*')
-	fi
-	tidle=\$((\$( cat /proc/uptime | grep -o '^[0-9]*') - \$lastTime))
-	if [[ \$tidle -gt \$timeout ]]; then
-		logger "\$0: timer expired - shutdown now"
-		sudo halt
-	fi
-	sleep 10
+    numClients=\$(/sbin/iw dev \$apDevice station dump | /bin/grep -oE "([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}" | /usr/bin/wc)
+    if [[ ! \$numClients =~ \s*0(.*) ]] || [ \$lastTime -eq 0 ]; then
+        lastTime=\$(cat /proc/uptime | grep -o '^[0-9]*')
+    fi
+    tidle=\$((\$( cat /proc/uptime | grep -o '^[0-9]*') - \$lastTime))
+    if [[ \$tidle -gt \$timeout ]]; then
+        logger "\$0: timer expired - shutdown now"
+        sudo halt
+    fi
+    sleep 10
 done
 
 EOF

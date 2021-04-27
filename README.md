@@ -31,7 +31,7 @@ The remaing access to the SD-card can be checked with the tool `iotop -aoP`.
 
 ## Automatic Shutdown when idle
 Running a battery powered RaspAP makes energy management mandatory. The script `install_autoshutdown.sh` installs a system service, which checks every 10 seconds the number of 
-client devices connected to the access point. If the time, since the last client disconnected, exceeds a predefined number of minutes, the shutdown process of the Raspberry Pi 
+client devices connected to the access point. If the time since the last client disconnected exceeds a predefined number of minutes, the shutdown process of the Raspberry Pi 
 is initiated
 
 The script includes the service file `autoshutdown.service` as well as the required script `autoShutdown.sh` written to `/usr/local/sbin`. The install script is asking for the 
