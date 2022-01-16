@@ -28,7 +28,10 @@ function _RAMVersion() {
 }
 
 function _installWifiDrivers() {
-  wget -q https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_wlan_driver_modules.sh -O /tmp/install_wifi_drivers.sh
+# As of January 2022, fars-robotics.net is no longer updating the modules
+#  wget -q https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_wlan_driver_modules.sh -O /tmp/install_wifi_drivers.sh
+# install drivers from source via DKMS
+  wget -q https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_wlan_drivers.sh -O /tmp/install_wifi_drivers.sh
   source /tmp/install_wifi_drivers.sh
 }
 
