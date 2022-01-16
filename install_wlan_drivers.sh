@@ -53,7 +53,7 @@ function _rtl8814au() {
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
         repo="aircrack-ng/rtl8814au.git"
-        echo "Found device/install driver $drv ... compile and install from the github repository $repo"
+        echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '88[x1][x4]au' "$drv"; then return 1; fi
         _echo "$RED" "--- Please give feedback about success and problems with this driver ---"
         git clone https://github.com/$repo "$drv"
@@ -78,7 +78,7 @@ function _rtl8821cu() {
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
         repo="morrownr/8821cu.git"
-        echo "Found device/install driver $drv ... compile and install from the github repository $repo"
+        echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '8821cu' "$drv"; then return 1; fi
         _echo "$RED" "--- Please give feedback about success and problems with this driver ---"
         git clone https://github.com/$repo "$drv"
@@ -135,7 +135,7 @@ function _rtl8812au() {
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
         repo="aircrack-ng/rtl8812au.git"
-        echo "Found device/install driver $drv ... compile and install from the github repository $repo"
+        echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '88[x1][x124]au' "$drv"; then return 1; fi
         git clone https://github.com/$repo "$drv"
         cd "$drv"
@@ -165,7 +165,7 @@ function _rtl88x2bu() {
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
         repo="cilynx/rtl88x2bu.git"
-        echo "Found device/install driver $drv ... compile and install from the github repository $repo"
+        echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '88[x12][x2]bu' "$drv"; then return 1; fi
         git clone https://github.com/$repo "$drv"
         cd "$drv"
@@ -186,7 +186,7 @@ function _rtl88x2bu() {
 
 # -----------------------------------------------------------------------------------
 
-_echo "\n\nCompile and install driver for WLAN adapter\n"
+_echo "\n\n\nCompile and install driver for WLAN adapter\n"
 
 fstat=/tmp/$(basename "$0").stat
 if [ ! -f $fstat ]; then
