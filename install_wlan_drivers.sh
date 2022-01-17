@@ -1,11 +1,13 @@
 #!/bin/bash
 #
-# Compile and install usb wlan drivers
+# Compile and install usb wlan drivers on a Raspberry Pi
 # The WLAN USB device has to be connected one after the other
 #
-# Parameters: none - ask to attach device
-#             driver-name - install that driver only
+# Parameters: none          - ask to attach device
+#             driver-name   - install that specified driver only
 #             anything else - return list of drivers
+#
+# 2022 zbchristian
 
 # list of drivers. For each driver a function _NAME has to exist
 drivers=( rtl8814au rtl8812au rtl88x2bu rtl8821cu )
@@ -38,6 +40,24 @@ function _configCompile() {
     # compile on raspberry pi
     sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile
     sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile
+}
+
+function _installFromDKMSconf() {
+    if [ ! -f dkms.conf ]; then 
+        echo "DKMS install failed - missing dkms.conf"
+        return 1
+    fi
+    VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
+    NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)
+    MOD=$(sed -n 's/BUILT_MODULE_NAME.*="\(.*\)"/\1/p' dkms.conf)
+	if [ -z $VER ] || [ -z $MOD ]; then return 1; fi
+    sudo rsync --exclude=.git -rqhP ./ /usr/src/${NAM}-${VER}
+    sudo dkms add -m ${NAM} -v ${VER}
+    sudo dkms build -m ${NAM} -v ${VER}
+    sudo dkms install -m ${NAM} -v ${VER}
+    sudo modprobe ${MOD}
+    echo "DKMS install done"
+    return 0
 }
 
 function _rtl8814au() {
@@ -84,15 +104,7 @@ function _rtl8821cu() {
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
-        VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
-        NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)
-        MOD=$(sed -n 's/BUILT_MODULE_NAME\[0\]="\(.*\)"/\1/p' dkms.conf)
-        sudo rsync --exclude=.git -rqhP ./ /usr/src/${NAM}-${VER}
-        sudo dkms add -m ${NAM} -v ${VER}
-        sudo dkms build -m ${NAM} -v ${VER}
-        sudo dkms install -m ${NAM} -v ${VER}
-        sudo modprobe ${MOD}
-        echo "done"
+        _installFromDKMSconf
         return 0
     fi
     return 1
@@ -170,15 +182,7 @@ function _rtl88x2bu() {
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
-        VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
-        NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)
-        MOD=$(sed -n 's/BUILT_MODULE_NAME\[0\]="\(.*\)"/\1/p' dkms.conf)
-        sudo rsync --exclude=.git -rqhP ./ /usr/src/${NAM}-${VER}
-        sudo dkms add -m ${NAM} -v ${VER}
-        sudo dkms build -m ${NAM} -v ${VER}
-        sudo dkms install -m ${NAM} -v ${VER}
-        sudo modprobe ${MOD}
-        echo "done"
+        _installFromDKMSconf
         return 0
     fi
     return 1
