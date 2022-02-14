@@ -7,11 +7,11 @@ $ ./install_raspap_ram_wlan.sh
 ```
 Follow the instructions.
 
-## Configure Rasperry Pi OS, install drivers and start the RaspAP installer
-The script `install_raspap_ram_wlan.sh` configures Rasperyy Pi OS for a (nearly) read-only operation, allows to install additional Wifi drivers and starts the RaspAP installer ( https://install.raspap.com ). See details about the Raspberry Pi OS configuration and driver installation below.
+## Configure Raspberry Pi OS, install drivers and start the RaspAP installer
+The script `install_raspap_ram_wlan.sh` configures Raspberry Pi OS for a (nearly) read-only operation, allows to install additional Wifi drivers and starts the RaspAP installer ( https://install.raspap.com ). See details about the Raspberry Pi OS configuration and driver installation below.
 
 ## Install missing WLAN driver modules
-A standard nuisance of Rasperry Pi OS is, that drivers for a lot of WLAN devices are missing. This is especially true for newer Realtek based devices. 
+A standard nuisance of Raspberry Pi OS is, that drivers for a lot of WLAN devices are missing. This is especially true for newer Realtek based devices. 
 
 ### Compile and install drivers from source
 If you prefer to compile drivers from scratch, the script `install_wlan_drivers.sh` extracts the source for some very common drivers from Github. The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
