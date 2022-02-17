@@ -47,10 +47,18 @@ function _installFromDKMSconf() {
         echo "DKMS install failed - missing dkms.conf"
         return 1
     fi
+    
+    # check if multi core compile is set
+    if ! grep -oP "MAKE.*-j.*KVER=" dkms.conf; then
+       np=`nproc`
+	   [ $np -gt 8 ] && np=8
+       sed  -i "s/KVER=/-j$np KVER=/" dkms.conf;
+    fi
+
     VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
     NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)
     MOD=$(sed -n 's/BUILT_MODULE_NAME.*="\(.*\)"/\1/p' dkms.conf)
-	if [ -z $VER ] || [ -z $MOD ]; then return 1; fi
+    if [ -z $VER ] || [ -z $MOD ]; then return 1; fi
     sudo rsync --exclude=.git -rqhP ./ /usr/src/${NAM}-${VER}
     sudo dkms add -m ${NAM} -v ${VER}
     sudo dkms build -m ${NAM} -v ${VER}
@@ -97,7 +105,7 @@ function _rtl8821cu() {
     vidpid+='|0BDA:2006|0BDA:8811|0BDA:C811|0BDA:C82B|0BDA:C82A|0BDA:C820|0BDA:C821|0BDA:B820|0BDA:B82B'
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
-        repo="morrownr/8821cu.git"
+        repo="morrownr/8821cu-20210118.git"
         echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '8821cu' "$drv"; then return 1; fi
         _echo "$RED" "--- Please give feedback about success and problems with this driver ---"
