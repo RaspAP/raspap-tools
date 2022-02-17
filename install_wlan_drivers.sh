@@ -51,7 +51,7 @@ function _installFromDKMSconf() {
     # check if multi core compile is set
     if ! grep -oP "MAKE.*-j.*KVER=" dkms.conf; then
        np=`nproc`
-	   [ $np -gt 8 ] && np=8
+       [ $np -gt 8 ] && np=8
        sed  -i "s/KVER=/-j$np KVER=/" dkms.conf;
     fi
 
