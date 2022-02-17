@@ -14,7 +14,7 @@ The script `install_raspap_ram_wlan.sh` configures Raspberry Pi OS for a (nearly
 A standard nuisance of Raspberry Pi OS is, that drivers for a lot of WLAN devices are missing. This is especially true for newer Realtek based devices. 
 
 ### Compile and install drivers from source
-If you prefer to compile drivers from scratch, the script `install_wlan_drivers.sh` extracts the source for some very common drivers from Github. The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
+If you prefer to compile drivers from scratch, the script `install_wlan_drivers.sh` extracts the source for some very common drivers from Github (rtl8814au, rtl8812au, rtl88x2bu, rtl8821cu). The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
 Depending on the raspberry pi version, this can take a long time.
 
 ### Precompiled driver modules
