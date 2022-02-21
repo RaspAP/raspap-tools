@@ -220,7 +220,10 @@ fi
 
 echo -e "You will be prompted to connect the device(s) one by one.\n"
 
+mkdir /tmp/wlan-drivers
+
 while :; do
+    cd /tmp/wlan-drivers
     echo -ne "${GREEN}Connect a single wlan device and press RETURN ( Q to quit) ${DEF}"
     read OK < /dev/tty
     if [ ! -z $OK ] && [[ $OK =~ [Qq] ]]; then
