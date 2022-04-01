@@ -18,6 +18,7 @@ If you prefer to compile drivers from scratch, the script `install_wlan_drivers.
 Depending on the raspberry pi version, this can take a long time.
 
 ### Precompiled driver modules
+**INFORMATION: modules at http://downloads.fars-robotics.net no longer updated. Last update in Oct 2021** 
 The webpage http://downloads.fars-robotics.net by MrEngman provides a lot of pre-compiled WLAN driver modules for different Raspberry Pi OS kernel versions. In order to install multiple drivers in one go, the script `install_wlan_driver_modules.sh` provides a wrapper for the install script http://downloads.fars-robotics.net/wifi-drivers/install-wifi. The script asks to plug in one device at a time and starts the `install-wifi` script. You might have to rerun the installation, when a kernel update is done.
 
 ## Raspberry Pi OS with substantially reduced SD-Card write access
