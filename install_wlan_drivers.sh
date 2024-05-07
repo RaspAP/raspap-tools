@@ -12,6 +12,10 @@
 # list of drivers. For each driver a function _NAME has to exist
 drivers=( rtl8814au rtl8812au rtl88x2bu rtl8821cu )
 
+# check for memory < 1GB and limit processes
+ isMem=$(cat /proc/meminfo | sed -rn 's/Memtotal:\s*([0-9]*).*/\1/ip')
+[ "$isMem" -lt $((1024*1024)) ] && maxProc=2 || maxProc=8
+
 RED="\e[31m\e[1m"
 GREEN="\e[32m\e[1m"
 DEF="\e[0m"
@@ -35,11 +39,19 @@ function _askUser() {
 }
 
 function _configCompile() {
+    # check architecture (32 or 64bit)
+    bits=$(getconf LONG_BIT)
     # to avoid compiler error from __DATE__ macros -> comment these lines
     find . -name "*.c" -exec grep -li __date__ {} \; | xargs sed -i '/^[^\/]/ s/\(.*__DATE__.*$\)/\/\/\ \1/'
     # compile on raspberry pi
     sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile
-    sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile
+    if [ "$bits" -eq "64" ]; then
+       sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile
+    else
+       sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile
+    fi
+}
+	
 }
 
 function _installFromDKMSconf() {
@@ -51,9 +63,11 @@ function _installFromDKMSconf() {
     # check if multi core compile is set
     if ! grep -oP "MAKE.*-j.*KVER=" dkms.conf; then
        np=`nproc`
-       [ $np -gt 8 ] && np=8
+       [ "$np" -gt "$maxProc" ] && np="$maxProc"
        sed  -i "s/KVER=/-j$np KVER=/" dkms.conf;
-    fi
+    elif [ "$maxProc" -lt $(nproc) ]; then
+	   sed -i "s/-j[^ \s]*/-j$maxProc/" dkms.conf
+	fi
 
     VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
     NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)

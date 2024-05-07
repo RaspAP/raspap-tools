@@ -14,13 +14,8 @@ The script `install_raspap_ram_wlan.sh` configures Raspberry Pi OS for a (nearly
 A standard nuisance of Raspberry Pi OS is, that drivers for a lot of WLAN devices are missing. This is especially true for newer Realtek based devices. 
 
 ### Compile and install drivers from source
-If you prefer to compile drivers from scratch, the script `install_wlan_drivers.sh` extracts the source for some very common drivers from Github (rtl8814au, rtl8812au, rtl88x2bu, rtl8821cu). The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
+The script `install_wlan_drivers.sh` tries to detect the WIFI card and extracts the required source for some very common drivers from Github (rtl8814au, rtl8812au, rtl88x2bu, rtl8821cu). The source is compiled and the installation done via DKMS. This ensures, that the driver is automatically recompiled, when the kernel version is changing.
 Depending on the raspberry pi version, this can take a long time.
-
-### Precompiled driver modules
-**INFORMATION: modules at http://downloads.fars-robotics.net no longer updated. Last update in Oct 2021** 
-
-The webpage http://downloads.fars-robotics.net by MrEngman provides a lot of pre-compiled WLAN driver modules for different Raspberry Pi OS kernel versions. In order to install multiple drivers in one go, the script `install_wlan_driver_modules.sh` provides a wrapper for the install script http://downloads.fars-robotics.net/wifi-drivers/install-wifi. The script asks to plug in one device at a time and starts the `install-wifi` script. You might have to rerun the installation, when a kernel update is done.
 
 ## Raspberry Pi OS with substantially reduced SD-Card write access
 Utilizing a Raspberry PI as an access point, requires a reliable operation over a long period of time. Switching the Raspberry PI off without a regular shutdown procedure might lead to a damaged system. Writing lots of logging and temporary data to the SD-card will shorten the lifetime of the system. 
