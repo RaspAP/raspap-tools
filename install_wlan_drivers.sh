@@ -4,17 +4,13 @@
 # The WLAN USB device has to be connected one after the other
 #
 # Parameters: none          - ask to attach device
-#             driver-name   - install that specified driver only
+#             driver-name   - install the specified driver only
 #             anything else - return list of drivers
 #
-# 2022 zbchristian
+# 2022/2024 zbchristian
 
 # list of drivers. For each driver a function _NAME has to exist
 drivers=( rtl8814au rtl8812au rtl88x2bu rtl8821cu )
-
-# check for memory < 1GB and limit processes
- isMem=$(cat /proc/meminfo | sed -rn 's/Memtotal:\s*([0-9]*).*/\1/ip')
-[ "$isMem" -lt $((1024*1024)) ] && maxProc=2 || maxProc=8
 
 RED="\e[31m\e[1m"
 GREEN="\e[32m\e[1m"
@@ -25,6 +21,19 @@ function _echo() {
     [ $# == 2 ] && txt=$2 && col=$1
     echo -e "${col}$txt${DEF}"
 }
+
+_echo "\n\n\nCompile and install driver for wireless adapter\n"
+
+# check for memory < 1GB and limit number of processes
+isMem=$(cat /proc/meminfo | sed -rn 's/Memtotal:\s*([0-9]*).*/\1/ip')
+nProc=$(nproc)
+if [ "$nProc" -gt 1 ]; then
+  [ "$isMem" -le $((1024*1024)) ] && nProc=2
+  [ "$isMem" -le $((512*1024)) ] && nProc=1
+fi 
+if [ "$nProc" -lt $(nproc) ]; then
+   _echo "$RED" "Memory is low - to avoid problems, the number of processes is reduced to $nProc \n"
+fi
 
 function _askUser() {
     # check for existing driver
@@ -45,13 +54,21 @@ function _configCompile() {
     find . -name "*.c" -exec grep -li __date__ {} \; | xargs sed -i '/^[^\/]/ s/\(.*__DATE__.*$\)/\/\/\ \1/'
     # compile on raspberry pi
     sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile
-    if [ "$bits" -eq "64" ]; then
+    if [ "$bits" -eq "64" ] && grep -coP "ARM64_RPI" Makefile; then
        sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile
     else
        sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile
     fi
 }
-	
+
+function _patchDKMSConf() {
+    if [ ! -f dkms.conf ]; then return 1; fi
+    # check if multi core compile is set and set number of processes
+    if ! grep -coP "MAKE.*-j.*KVER=" dkms.conf; then
+       sed  -i "s/KVER=/-j$nProc KVER=/" dkms.conf;
+    else
+	   sed -i "s/-j\s*[^ \s]* KVER=/-j$nProc KVER=/" dkms.conf
+    fi
 }
 
 function _installFromDKMSconf() {
@@ -59,16 +76,6 @@ function _installFromDKMSconf() {
         echo "DKMS install failed - missing dkms.conf"
         return 1
     fi
-    
-    # check if multi core compile is set
-    if ! grep -oP "MAKE.*-j.*KVER=" dkms.conf; then
-       np=`nproc`
-       [ "$np" -gt "$maxProc" ] && np="$maxProc"
-       sed  -i "s/KVER=/-j$np KVER=/" dkms.conf;
-    elif [ "$maxProc" -lt $(nproc) ]; then
-	   sed -i "s/-j[^ \s]*/-j$maxProc/" dkms.conf
-	fi
-
     VER=$(sed -n 's/PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
     NAM=$(sed -n 's/PACKAGE_NAME="\(.*\)"/\1/p' dkms.conf)
     MOD=$(sed -n 's/BUILT_MODULE_NAME.*="\(.*\)"/\1/p' dkms.conf)
@@ -94,14 +101,19 @@ function _rtl8814au() {
     vidpid+='|2357:0106'
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
-        repo="aircrack-ng/rtl8814au.git"
+#        repo="aircrack-ng/rtl8814au.git"
+        repo="morrownr/8814au"
         echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '88[x1][x4]au' "$drv"; then return 1; fi
         _echo "$RED" "--- Please give feedback about success and problems with this driver ---"
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
-        sudo make dkms_install
+# morrownr repo - install script checks memory and reduces number of processes
+        sudo ./install-driver.sh        
+# aicrack-ng repo
+#        _patchDKMSConf
+#        sudo make dkms_install
         echo "done"
         return 0
     fi
@@ -119,13 +131,14 @@ function _rtl8821cu() {
     vidpid+='|0BDA:2006|0BDA:8811|0BDA:C811|0BDA:C82B|0BDA:C82A|0BDA:C820|0BDA:C821|0BDA:B820|0BDA:B82B'
 
     if [ $install == 0 ] || cat .lsusb | grep -iE "$vidpid" > /dev/null; then
-        repo="morrownr/8821cu-20210118.git"
+        repo="morrownr/8821cu-20210916.git"
         echo "Found device/install driver $drv ... compile and install from Github repository $repo"
         if _askUser '8821cu' "$drv"; then return 1; fi
         _echo "$RED" "--- Please give feedback about success and problems with this driver ---"
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
+        _patchDKMSConf
         _installFromDKMSconf
         return 0
     fi
@@ -174,6 +187,7 @@ function _rtl8812au() {
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
+        _patchDKMSConf
         sudo make dkms_install
         echo "done"
         return 0
@@ -204,6 +218,7 @@ function _rtl88x2bu() {
         git clone https://github.com/$repo "$drv"
         cd "$drv"
         _configCompile
+        _patchDKMSConf
         _installFromDKMSconf
         return 0
     fi
@@ -212,7 +227,8 @@ function _rtl88x2bu() {
 
 # -----------------------------------------------------------------------------------
 
-_echo "\n\n\nCompile and install driver for WLAN adapter\n"
+mkdir -p /tmp/wlan-drivers
+cd /tmp/wlan-drivers
 
 fstat=/tmp/$(basename "$0").stat
 if [ ! -f $fstat ]; then
@@ -232,12 +248,10 @@ if [ $# == 1 ]; then
     fi
 fi
 
+
 echo -e "You will be prompted to connect the device(s) one by one.\n"
 
-mkdir /tmp/wlan-drivers
-
 while :; do
-    cd /tmp/wlan-drivers
     echo -ne "${GREEN}Connect a single wlan device and press RETURN ( Q to quit) ${DEF}"
     read OK < /dev/tty
     if [ ! -z $OK ] && [[ $OK =~ [Qq] ]]; then

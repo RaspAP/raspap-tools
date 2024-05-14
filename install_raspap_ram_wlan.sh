@@ -83,3 +83,4 @@ fi
 
 _echo "The system should be rebooted now"
 
+q
