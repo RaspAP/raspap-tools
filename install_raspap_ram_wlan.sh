@@ -2,14 +2,15 @@
 #
 # Install RaspAP + additional Wireless drivers + minimize write access to sd-card
 # ===============================================================================
-# - Write Raspian lite to a SD-card
-# - Create a file with name "ssh" (no extension) on the partition called "boot", to allow for SSH access
-# - start the Raspberry PI with the SD-Card and login via ssh (default user: pi, password: raspberry)
+# - Write Raspberry Pi OS to a SD-card
+# 	o Do not forget to enable ssh access and set the user/password
+#   o Set the WIFI parameters, if you want to access the Pi this way
+# - start the Raspberry PI with the SD-Card and login via ssh
 # - download this script: "wget https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_raspap_ram_wlan.sh"
 # - chmod +x install_raspap_ram_wlan.sh
 # - ./install_raspap_ram_wlan.sh
 #
-# zbchristian 2021
+# zbchristian 2024
 #
 
 RED="\e[31m\e[1m"
@@ -30,6 +31,7 @@ function _RAMVersion() {
 function _installWifiDrivers() {
 # As of January 2022, fars-robotics.net is no longer updating the modules
 #  wget -q https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_wlan_driver_modules.sh -O /tmp/install_wifi_drivers.sh
+
 # install drivers from source via DKMS
   wget -q https://raw.githubusercontent.com/RaspAP/raspap-tools/main/install_wlan_drivers.sh -O /tmp/install_wifi_drivers.sh
   source /tmp/install_wifi_drivers.sh
@@ -65,7 +67,7 @@ fi
 
 # unblock wlan for raspis with build in wireless
 sudo rfkill unblock wlan
-_echo "\nYou should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options\n"
+_echo "\nYou should run 'sudo raspi-config' and set the 'WLAN coutry' in the localisation options, if not set already OS installation\n"
 
 wget -q https://install.raspap.com -O install_raspap.sh
 chmod +x install_raspap.sh
@@ -80,4 +82,3 @@ else
 fi
 
 _echo "The system should be rebooted now"
-
